@@ -5,9 +5,10 @@ const ulTasks = document.querySelector('.app__section-task-list')
 const cancelBt = document.querySelector('.app__form-footer__button--cancel')
 const deleteBt = document.querySelector('.app__form-footer__button--delete')
 const clearAllBt = document.getElementById('btn-remover-todas')
+const clearDoneBt = document.getElementById('btn-remover-concluidas')
 const currentTask = document.querySelector('.app__section-active-task-description')
 
-const tasks = JSON.parse(localStorage.getItem('tasks')) || []
+let tasks = JSON.parse(localStorage.getItem('tasks')) || []
 let selectedTask = null
 let liSelectedTask = null
 
@@ -73,7 +74,7 @@ function createTaskElement(task) {
     li.append(p)
     li.append(input)
     li.append(button)
-    debugger
+
     if (task.complete) {
         li.classList.add('app__section-task-list-item-complete')
         button.setAttribute('disabled', 'disabled')
@@ -144,6 +145,18 @@ clearAllBt.addEventListener('click', () => {
         })
     currentTask.textContent = ''
     localStorage.clear()
+})
+
+clearDoneBt.addEventListener('click', () => {
+    document.querySelectorAll('.app__section-task-list-item')
+        .forEach(element => {
+            if (element.classList.contains('app__section-task-list-item-complete')) {
+
+                element.remove()
+            }
+        })
+    tasks = tasks.filter(task => !task.complete)
+    updateTasks()
 })
 
 document.addEventListener('focoEnded', () => {

@@ -8,6 +8,10 @@ const clearAllBt = document.getElementById('btn-remover-todas')
 
 const tasks = JSON.parse(localStorage.getItem('tasks')) || []
 
+function updateTasks() {
+    localStorage.setItem('tasks', JSON.stringify(tasks))
+
+}
 
 function createTaskElement(task) {
     const li = document.createElement('li')
@@ -33,23 +37,31 @@ function createTaskElement(task) {
     button.classList.add('app_button-edit')
 
     button.onclick = () => {
-        if (p.classList.contains('hidden')) {
-            p.classList.add('show')
-            p.classList.remove('hidden')
-            input.classList.add('hidden')
-            input.classList.remove('show')
-            p.textContent = input.value
-        } else {
+        console.log(input.classList.contains('hidden'))
+
+        if (input.classList.contains('hidden')) {
             p.classList.add('hidden')
             p.classList.remove('show')
             input.classList.add('show')
             input.classList.remove('hidden')
-            input.value = p.textContent
+            input.value = '' //cleans the bar to insert text
+
+        } else {
+            p.classList.add('show')
+            p.classList.remove('hidden')
+            input.classList.add('hidden')
+            input.classList.remove('show')
+
         }
+        /**if there is a value the text is replaced/edited, otherwise the text does not change */
+        if (input.value) {
+            p.textContent = input.value
+            task.description = input.value
+            updateTasks()
+
+        }
+
     }
-
-
-
     const img = document.createElement('img')
 
     img.setAttribute('src', '/imagens/edit.png')
@@ -75,7 +87,7 @@ form.addEventListener('submit', (evento) => {
 
     const taskElement = createTaskElement(task)
     ulTasks.append(taskElement)
-    localStorage.setItem('tasks', JSON.stringify(tasks))
+    updateTasks()
     formAnswer.value = ''
     form.classList.add('hidden')
 })
@@ -97,5 +109,4 @@ deleteBt.addEventListener('click', () => {
 
 clearAllBt.addEventListener('click', () => {
     localStorage.clear()
-
 })

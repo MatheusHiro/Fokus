@@ -77,7 +77,7 @@ function changeText(context) {
 function changeContextBackground(context) {
     html.setAttribute('data-contexto', context)
     console.log(context)
-    imageBackground.setAttribute('src', `/imagens/${context}.png`);
+    imageBackground.setAttribute('src', `./imagens/${context}.png`);
 }
 
 function changeSelectedButton(context) {

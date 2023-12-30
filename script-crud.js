@@ -8,6 +8,7 @@ const clearAllBt = document.getElementById('btn-remover-todas')
 const currentTask = document.querySelector('.app__section-active-task-description')
 
 const tasks = JSON.parse(localStorage.getItem('tasks')) || []
+let selectedTask = null
 
 function updateTasks() {
     localStorage.setItem('tasks', JSON.stringify(tasks))
@@ -73,11 +74,19 @@ function createTaskElement(task) {
     li.append(button)
 
     li.onclick = () => {
-        currentTask.textContent = p.textContent
         document.querySelectorAll('.app__section-task-list-item-active')
             .forEach(element => {
                 element.classList.remove('app__section-task-list-item-active')
             })
+
+        if (selectedTask === task) { //remove selection when clicking twice on the same task
+            currentTask.textContent = ''
+            selectedTask = null
+            return
+        }
+        selectedTask = task
+        currentTask.textContent = p.textContent
+
         li.classList.add('app__section-task-list-item-active')
     }
     return li

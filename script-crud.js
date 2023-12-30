@@ -9,6 +9,7 @@ const currentTask = document.querySelector('.app__section-active-task-descriptio
 
 const tasks = JSON.parse(localStorage.getItem('tasks')) || []
 let selectedTask = null
+let liSelectedTask = null
 
 function updateTasks() {
     localStorage.setItem('tasks', JSON.stringify(tasks))
@@ -72,23 +73,34 @@ function createTaskElement(task) {
     li.append(p)
     li.append(input)
     li.append(button)
+    debugger
+    if (task.complete) {
+        li.classList.add('app__section-task-list-item-complete')
+        button.setAttribute('disabled', 'disabled')
+    } else {
+        li.onclick = () => {
+            document.querySelectorAll('.app__section-task-list-item-active')
+                .forEach(element => {
+                    element.classList.remove('app__section-task-list-item-active')
+                })
 
-    li.onclick = () => {
-        document.querySelectorAll('.app__section-task-list-item-active')
-            .forEach(element => {
-                element.classList.remove('app__section-task-list-item-active')
-            })
+            if (selectedTask === task) { //remove selection when clicking twice on the same task
+                currentTask.textContent = ''
+                selectedTask = null
+                liSelectedTask = null
+                return
+            }
+            selectedTask = task
+            liSelectedTask = li
+            if (!li.classList.contains('app__section-task-list-item-complete')) {
+                currentTask.textContent = p.textContent
 
-        if (selectedTask === task) { //remove selection when clicking twice on the same task
-            currentTask.textContent = ''
-            selectedTask = null
-            return
+                li.classList.add('app__section-task-list-item-active')
+
+            }
         }
-        selectedTask = task
-        currentTask.textContent = p.textContent
-
-        li.classList.add('app__section-task-list-item-active')
     }
+
     return li
 }
 
@@ -132,4 +144,15 @@ clearAllBt.addEventListener('click', () => {
         })
     currentTask.textContent = ''
     localStorage.clear()
+})
+
+document.addEventListener('focoEnded', () => {
+    if (selectedTask && liSelectedTask) {
+        liSelectedTask.classList.remove('app__section-task-list-item-active')
+        liSelectedTask.classList.add('app__section-task-list-item-complete')
+        liSelectedTask.querySelector('button').setAttribute('disabled', 'disabled')
+        selectedTask.complete = true
+        currentTask.textContent = ''
+        updateTasks()
+    }
 })

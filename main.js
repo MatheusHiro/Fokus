@@ -106,6 +106,11 @@ const countdown = () => {
         showTimer()
         startTimeout.play()
         alert('Time ended!')
+        const focoActive = html.getAttribute('data-contexto') == 'foco'
+        if (focoActive) {
+            evento = new CustomEvent('focoEnded')
+            document.dispatchEvent(evento)
+        }
         resetTimer()
         return
     }

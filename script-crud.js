@@ -5,6 +5,7 @@ const ulTasks = document.querySelector('.app__section-task-list')
 const cancelBt = document.querySelector('.app__form-footer__button--cancel')
 const deleteBt = document.querySelector('.app__form-footer__button--delete')
 const clearAllBt = document.getElementById('btn-remover-todas')
+const currentTask = document.querySelector('.app__section-active-task-description')
 
 const tasks = JSON.parse(localStorage.getItem('tasks')) || []
 
@@ -71,6 +72,14 @@ function createTaskElement(task) {
     li.append(input)
     li.append(button)
 
+    li.onclick = () => {
+        currentTask.textContent = p.textContent
+        document.querySelectorAll('.app__section-task-list-item-active')
+            .forEach(element => {
+                element.classList.remove('app__section-task-list-item-active')
+            })
+        li.classList.add('app__section-task-list-item-active')
+    }
     return li
 }
 
@@ -108,5 +117,10 @@ deleteBt.addEventListener('click', () => {
 })
 
 clearAllBt.addEventListener('click', () => {
+    document.querySelectorAll('.app__section-task-list-item')
+        .forEach(element => {
+            element.remove()
+        })
+    currentTask.textContent = ''
     localStorage.clear()
 })
